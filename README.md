@@ -137,6 +137,27 @@ host loader itself tests for, so a re-registered preset still evaluates its own 
 
 ## Installing, updating, verifying
 
+**From GitHub (any machine):** add the repo as a profile dependency and enable the
+bundle. From a DeepSeek Harness session, or by hand in the profile's
+`package.json`:
+
+```sh
+# in C:\Users\<you>\.dsh\profiles\desktop\
+pnpm add "dsh-wsl@github:stallenlu/dsh-wsl"        # or npm i, same spec
+```
+
+```json
+"dependencies": {
+  "dsh-wsl": "github:stallenlu/dsh-wsl"
+}
+```
+
+then add `"dsh-wsl"` to `dsh.profile.bundles` in the same file and restart the
+harness. `github:` specs are fetched as a tarball, so the copy is replaced
+wholesale on every version bump — no `file:`-style remove/reinstall dance.
+
+**Local checkout (development):**
+
 ```text
 # source of truth — edit here
 C:\Users\GT14\Documents\deepseek-harness\wsl-rework\next\

@@ -130,6 +130,26 @@ process.platform === 'win32'` 门清掉：该表达式由加载器在宿主上�
 
 ## 安装、更新、验证
 
+**从 GitHub 安装（任意机器）：** 把仓库加为 profile 依赖并启用 bundle。在
+DeepSeek Harness 会话里，或手动改 profile 的 `package.json`：
+
+```sh
+# 在 C:\Users\<你>\.dsh\profiles\desktop\ 下
+pnpm add "dsh-wsl@github:stallenlu/dsh-wsl"        # 或 npm i，写法相同
+```
+
+```json
+"dependencies": {
+  "dsh-wsl": "github:stallenlu/dsh-wsl"
+}
+```
+
+然后在同一文件的 `dsh.profile.bundles` 里加 `"dsh-wsl"` 并重启 harness。
+`github:` 规格按 tarball 拉取，每次升版本整体替换副本——没有 `file:` 那套
+remove/reinstall 流程。
+
+**本地检出（开发）：**
+
 ```text
 # 真源——在这里改
 C:\\Users\\GT14\\Documents\\deepseek-harness\\wsl-rework\\next\\
