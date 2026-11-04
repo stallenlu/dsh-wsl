@@ -133,8 +133,9 @@ shipped-hidden 变体则保持收起。
 回环。Windows cwd 的会话逐字节原样通过。
 
 `resolveExecutable` 和 `terminalEnvironment` 有意不动：它们回答的是宿主级
-问题（Windows 上哪个 `bash.exe` 存在），从发行版内回答是另一种主张，与那些
-调用点的语义不符。
+问题（Windows 上哪个 `bash.exe` 存在），只参与 shell *发现*和参数拼装。真正启动的
+shell 在这里决定——请求的 POSIX shell 名会被带进发行版（`/bin/zsh`、`/bin/fish`……，
+找不到就退回 `/bin/bash`），发行版自己的 shell 都能跟随。
 
 ## 预设变体，不是全局模式
 

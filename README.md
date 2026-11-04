@@ -139,8 +139,10 @@ so the host's own ConPTY carries a real Linux pty — input, output and `resize`
 round-trip. Sessions with a Windows cwd pass through untouched, byte for byte.
 
 `resolveExecutable` and `terminalEnvironment` are deliberately left alone: they answer
-host-wide questions (which `bash.exe` exists on Windows), and answering them from inside a
-distribution would be a different claim than the one those call sites are making.
+host-wide questions (which `bash.exe` exists on Windows) and only feed shell *discovery*
+and argument building. The shell that actually starts is chosen here — the requested POSIX
+shell name is passed into the distribution (`/bin/zsh`, `/bin/fish`, …, falling back to
+`/bin/bash`), so the distro's own shells are honored.
 
 ## Preset variants, not a mode
 
