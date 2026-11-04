@@ -6,6 +6,20 @@ on a different substrate: **one persistent agent process inside the distribution
 reached over a JSON-lines pipe, instead of a 9P file share plus a spawn per command.
 中文版：[README.zh-CN.md](README.zh-CN.md)（内容对应，以本文为准）.
 
+## Acknowledgments
+
+This plugin stands on the shoulders of
+[`dsh-wsl-workspace`](https://github.com/dsh-wsl-workspace-maintainers/dsh-wsl-workspace)
+by **Yuntao Liu ([@6Mikao9](https://github.com/6Mikao9))** and its maintainers.
+That plugin proved the workflow this one serves — adding a WSL workspace from
+the sidebar and running a whole session inside the distribution — and its
+client design (the header-entry mount, the add-workspace dialog, the
+footer-seat fallback) is the blueprint `src/client/` follows. The rebuild
+changes the substrate, not the ideas: thank you.
+
+Please file dsh-wsl issues here, and direct `dsh-wsl-workspace` questions to
+its own repository.
+
 ```
 browser ──POST /dsh-wsl/api──▶ host plugin ──pipe──▶ node agent.mjs (in distro)
                                      │                        │

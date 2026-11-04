@@ -7,6 +7,19 @@ DeepSeek Harness 的 WSL 工作区插件。对
 
 （本文为 [README.md](README.md) 的中文版，内容对应；以英文版为准。）
 
+## 致谢
+
+本插件离不开
+[`dsh-wsl-workspace`](https://github.com/dsh-wsl-workspace-maintainers/dsh-wsl-workspace)
+及其作者 **刘云韬（[@6Mikao9](https://github.com/6Mikao9)）** 与各位维护者的工作。
+那个插件验证了本插件所服务的完整工作流——从侧栏添加 WSL 工作区、让整个会话
+跑在发行版内——它的客户端设计（标题栏入口挂载、添加工作区弹窗、footer
+席位回退）正是 `src/client/` 遵循的蓝图。本插件换的是基座，不是想法：
+向原作者与维护者致谢。
+
+dsh-wsl 的问题请在本仓库提 issue；`dsh-wsl-workspace` 本身的问题请到它
+自己的仓库反馈。
+
 ```
 浏览器 ──POST /dsh-wsl/api──▶ 宿主插件 ──管道──▶ node agent.mjs（发行版内）
                                     │                       │
