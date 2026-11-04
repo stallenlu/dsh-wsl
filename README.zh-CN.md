@@ -7,6 +7,17 @@ DeepSeek Harness 的 WSL 工作区插件。对
 
 （本文为 [README.md](README.md) 的中文版，内容对应；以英文版为准。）
 
+[English](README.md) · **中文**
+
+| | |
+| --- | --- |
+| 版本 | 0.1.0 |
+| 宿主 | DeepSeek Harness `0.2.1-rc.5`（桌面版与 Web 版） |
+| Node | `>= 22` |
+| 发行版 | 任意 WSL2 发行版（在 Ubuntu 26.04 上测试） |
+| 对等依赖 | `@deepseek-ai/cordis ^4.0.5` · `@deepseek-ai/dsh-fs` / `dsh-shell` / `dsh-sandbox` / `dsh-subprocess` / `dsh-tools` `^0.2.1-rc.5` · `@deepseek-ai/schemastery ^3.18.5` |
+| 客户端注入 | `@deepseek-ai/dsh-client-ui-slots` · `@deepseek-ai/dsh-client-ui-sidebar` |
+
 ## 致谢
 
 本插件离不开

@@ -6,6 +6,17 @@ on a different substrate: **one persistent agent process inside the distribution
 reached over a JSON-lines pipe, instead of a 9P file share plus a spawn per command.
 中文版：[README.zh-CN.md](README.zh-CN.md)（内容对应，以本文为准）.
 
+**English** · [中文](README.zh-CN.md)
+
+| | |
+| --- | --- |
+| Version | 0.1.0 |
+| Harness | DeepSeek Harness `0.2.1-rc.5` (desktop & web) |
+| Node | `>= 22` |
+| Distro | any WSL2 distro (tested on Ubuntu 26.04) |
+| Peer deps | `@deepseek-ai/cordis ^4.0.5` · `@deepseek-ai/dsh-fs` / `dsh-shell` / `dsh-sandbox` / `dsh-subprocess` / `dsh-tools` `^0.2.1-rc.5` · `@deepseek-ai/schemastery ^3.18.5` |
+| Client inject | `@deepseek-ai/dsh-client-ui-slots` · `@deepseek-ai/dsh-client-ui-sidebar` |
+
 ## Acknowledgments
 
 This plugin stands on the shoulders of
