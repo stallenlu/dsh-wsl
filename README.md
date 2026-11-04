@@ -162,7 +162,7 @@ host loader itself tests for, so a re-registered preset still evaluates its own 
 
 ## Installing, updating, verifying
 
-**From GitHub (any machine):** add the repo as a profile dependency and enable the
+`npm install dsh-wsl-suite` in the profile directory — the simplest path, and the one dshfind's in-DSH marketplace uses. **From GitHub (any machine):** add the repo as a profile dependency and enable the
 bundle. From a DeepSeek Harness session, or by hand in the profile's
 `package.json`:
 

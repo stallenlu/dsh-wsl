@@ -154,7 +154,7 @@ process.platform === 'win32'` 门清掉：该表达式由加载器在宿主上�
 
 ## 安装、更新、验证
 
-**从 GitHub 安装（任意机器）：** 把仓库加为 profile 依赖并启用 bundle。在
+npm 上发布名是 `dsh-wsl-suite`（`dsh-wsl` 因 npm 防山寨规则不可注册）。在 profile 目录 `pnpm add dsh-wsl-suite` 即可，dshfind 的站内一键安装走的就是这条路。**从 GitHub 安装（任意机器）：** 把仓库加为 profile 依赖并启用 bundle。在
 DeepSeek Harness 会话里，或手动改 profile 的 `package.json`：
 
 ```sh
