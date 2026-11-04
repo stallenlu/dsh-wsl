@@ -1,0 +1,8 @@
+# Bundle patch: one entry, loaded into every profile that installs this bundle.
+#
+# The host half publishes `wsl-<mode>` variants of the profile's own agent presets,
+# so the WSL world is a preset choice rather than a separate mode. The browser half
+# is described by the `dsh.client` manifest in package.json.
+- insert:
+    - id: dsh-wsl
+      name: 'dsh-wsl'

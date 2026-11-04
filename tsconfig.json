@@ -1,0 +1,27 @@
+{
+  // Typecheck-only project; emission is tsdown's job (tsdown.config.ts).
+  // @deepseek-ai/* resolve from node_modules — this package is standalone and
+  // targets the PUBLISHED declaration plane (lib/types), which is the artifact
+  // plane the running harness actually loads.
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "jsx": "react-jsx",
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["src"],
+  "exclude": ["lib", "node_modules", "tests", "src/client"]
+}

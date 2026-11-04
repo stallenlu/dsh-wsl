@@ -1,0 +1,9 @@
+# local harness install artifacts
+node_modules/
+lib/
+
+# probe scripts: machine-specific paths, not part of the plugin
+scratch/
+
+# rasterized icon preview (regenerate: npx @resvg/resvg-js-cli icon.svg icon-preview.png)
+icon-preview.png
