@@ -63,7 +63,10 @@ export default defineConfig([
     },
     outputOptions: {
       entryFileNames: 'client.js',
-      banner: 'window.__ModuleLoader__.load({ id: "dsh-wsl", factory: (require) => {',
+      // The registration id MUST equal the package name: the host keys the
+      // boot graph by package name (dsh-wsl-suite) and `arrive()` rejects a
+      // bundle that loads without registering that exact id.
+      banner: 'window.__ModuleLoader__.load({ id: "dsh-wsl-suite", factory: (require) => {',
       footer: 'return module.exports; } });',
       intro: 'var module = { exports: {} }; var exports = module.exports;',
     },

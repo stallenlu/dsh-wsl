@@ -307,7 +307,7 @@ export function apply(ctx: { get(name: string): unknown; effect(body: () => () =
   ctx.effect(
     () =>
       slots.inject('sidebar.footer.action', () =>
-        slots.register({ name: 'sidebar.footer.action', id: 'dsh-wsl' }, AddWslAction),
+        slots.register({ name: 'sidebar.footer.action', id: 'dsh-wsl-suite' }, AddWslAction),
       ),
     'dsh-wsl: sidebar footer action',
   )

@@ -30,7 +30,7 @@ interface ClientModule {
 }
 
 /** Load `lib/client.js` under a stub `window.__ModuleLoader__`. */
-function loadBundle(): { module: ClientModule; registered: Registered[]; effects: string[] } {
+function loadBundle(): { module: ClientModule; registered: Registered[]; effects: string[]; bundleId: string } {
   assert.ok(existsSync(bundlePath), 'lib/client.js is missing — run `npm run build`')
   const registered: Registered[] = []
   const effects: string[] = []
@@ -55,9 +55,11 @@ function loadBundle(): { module: ClientModule; registered: Registered[]; effects
     },
   }
   let module: ClientModule | undefined
+  let bundleId = ''
   const window = {
     __ModuleLoader__: {
       load(entry: { id: string; factory: (req: (id: string) => unknown) => ClientModule }) {
+        bundleId = entry.id
         // The Tooltip primitive ships CSS module imports the Node test loader
         // cannot parse; the stub is a passthrough, which is all these tests
         // need — the real bubble is the shell's, rendered live.
@@ -80,7 +82,7 @@ function loadBundle(): { module: ClientModule; registered: Registered[]; effects
   new Function('window', readFileSync(bundlePath, 'utf8'))(window)
   assert.ok(module, 'the bundle never called window.__ModuleLoader__.load')
   module.apply(ctx)
-  return { module, registered, effects }
+  return { module, registered, effects, bundleId }
 }
 
 test('the bundle exports the registry shape and registers the footer fallback seat', () => {
@@ -92,8 +94,21 @@ test('the bundle exports the registry shape and registers the footer fallback se
   assert.equal(registered.length, 1)
   assert.equal(registered[0]!.name, 'sidebar.footer.action')
   // A fresh id adds beside the shipped entries; reusing one would replace it.
-  assert.equal(registered[0]!.id, 'dsh-wsl')
+  // It must match the bundle id in the tsdown banner, which must match the
+  // package name the boot graph is keyed by.
+  assert.equal(registered[0]!.id, 'dsh-wsl-suite')
   assert.equal(effects.length, 1)
+})
+
+test('the bundle id is the package name, as the host boot graph requires', () => {
+  // The host keys its client boot graph by PACKAGE NAME and `arrive()` throws
+  // `loaded without registering "<package>"` when the bundle registers another
+  // id — that is what broke a renamed package at boot while the host half
+  // loaded fine. Guards the tsdown banner against drifting from package.json.
+  const { bundleId, registered } = loadBundle()
+  const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { name: string }
+  assert.equal(bundleId, pkg.name)
+  assert.equal(registered[0]!.id, pkg.name)
 })
 
 test('the footer action is a token-styled icon button in both sidebar widths', () => {
@@ -180,7 +195,7 @@ test('the mounted action mirrors a W entry beside the workspace header add contr
     assert.ok(entry.className.includes('dww-header-entry'), 'the marker class is applied')
     assert.equal(entry.textContent, 'W')
     // The strip cap must be widened, or the third button is clipped.
-    const style = window.document.querySelector('style[data-plugin="dsh-wsl"]')
+    const style = window.document.querySelector('style[data-plugin="dsh-wsl-suite"]')
     assert.ok(style, 'the plugin stylesheet is injected')
     assert.match(style!.textContent ?? '', /max-width:\s*92px/)
     // The footer copy retires while the header seat is present.

@@ -5,7 +5,7 @@
  * light-theme fallbacks, so the same rules read correctly on the dark shell.
  */
 
-const STYLE_TAG_DATA_ATTRIBUTE = 'data-plugin="dsh-wsl"'
+const STYLE_TAG_DATA_ATTRIBUTE = 'data-plugin="dsh-wsl-suite"'
 
 const STYLES = `
 /* Sidebar-foot icon action beside Settings (28px round in the wide sidebar,
@@ -310,7 +310,7 @@ export function ensureStyles(): void {
   if (typeof document === 'undefined') return
   if (document.querySelector(`style[${STYLE_TAG_DATA_ATTRIBUTE}]`) !== null) return
   const style = document.createElement('style')
-  style.setAttribute('data-plugin', 'dsh-wsl')
+  style.setAttribute('data-plugin', 'dsh-wsl-suite')
   style.textContent = STYLES
   document.head.appendChild(style)
 }
