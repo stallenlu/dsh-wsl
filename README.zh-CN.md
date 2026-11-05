@@ -1,4 +1,4 @@
-# dsh-wsl
+# dsh-wsl-suite
 
 DeepSeek Harness 的 WSL 工作区插件。对
 [`dsh-wsl-workspace`](https://github.com/dsh-wsl-workspace-maintainers/dsh-wsl-workspace)
@@ -11,7 +11,7 @@ DeepSeek Harness 的 WSL 工作区插件。对
 
 | | |
 | --- | --- |
-| 版本 | 0.1.0 |
+| 版本 | 0.1.4 |
 | 宿主 | DeepSeek Harness `0.2.1-rc.5`（桌面版与 Web 版） |
 | Node | `>= 22` |
 | 发行版 | 任意 WSL2 发行版（在 Ubuntu 26.04 上测试） |
@@ -168,7 +168,7 @@ pnpm add dsh-wsl-suite          # 或：npm install dsh-wsl-suite
 **从 GitHub 安装。** 结果相同，适合版本还没发到 registry 之前：
 
 ```sh
-pnpm add "dsh-wsl-suite@github:stallenlu/dsh-wsl"
+pnpm add "dsh-wsl-suite@github:stallenlu/dsh-wsl-suite"
 ```
 
 `github:` 规格按 tarball 拉取，每次推送整体替换副本——没有 `file:` 那套

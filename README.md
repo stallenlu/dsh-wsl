@@ -1,4 +1,4 @@
-# dsh-wsl
+# dsh-wsl-suite
 
 WSL workspaces for DeepSeek Harness. A rebuild of
 [`dsh-wsl-workspace`](https://github.com/dsh-wsl-workspace-maintainers/dsh-wsl-workspace)
@@ -10,7 +10,7 @@ reached over a JSON-lines pipe, instead of a 9P file share plus a spawn per comm
 
 | | |
 | --- | --- |
-| Version | 0.1.0 |
+| Version | 0.1.4 |
 | Harness | DeepSeek Harness `0.2.1-rc.5` (desktop & web) |
 | Node | `>= 22` |
 | Distro | any WSL2 distro (tested on Ubuntu 26.04) |
@@ -178,7 +178,7 @@ and restart the harness.
 **From GitHub.** Same result, useful before a version reaches the registry:
 
 ```sh
-pnpm add "dsh-wsl-suite@github:stallenlu/dsh-wsl"
+pnpm add "dsh-wsl-suite@github:stallenlu/dsh-wsl-suite"
 ```
 
 `github:` specs are fetched as a tarball, so the copy is replaced wholesale on every
