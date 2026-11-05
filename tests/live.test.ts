@@ -14,6 +14,7 @@ import { join } from 'node:path'
 import { after, test } from 'node:test'
 import { Context } from '@deepseek-ai/cordis'
 import { channelFor, closeAll } from '../src/channel.ts'
+import { decodeWslOut } from '../src/index.ts'
 import { WslFileSystem } from '../src/fs.ts'
 import { WslShellExecutor } from '../src/shell.ts'
 
@@ -21,8 +22,7 @@ import { WslShellExecutor } from '../src/shell.ts'
 function distros(): string[] {
   try {
     const raw = execFileSync('wsl.exe', ['-l', '-q'], { windowsHide: true })
-    return raw
-      .toString('utf16le')
+    return decodeWslOut(raw)
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter((line) => line !== '')

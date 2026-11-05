@@ -12,14 +12,14 @@ import { execFileSync } from 'node:child_process'
 import { after, test } from 'node:test'
 import type { Context } from '@deepseek-ai/cordis'
 import { closeAll } from '../src/channel.ts'
+import { decodeWslOut } from '../src/index.ts'
 import { apply, linuxTarget, resolveTarget, shq } from '../src/search.ts'
 
 /** The distro names this machine has, decoded the way `wsl.exe` writes them. */
 function distros(): string[] {
   try {
     const raw = execFileSync('wsl.exe', ['-l', '-q'], { windowsHide: true })
-    return raw
-      .toString('utf16le')
+    return decodeWslOut(raw)
       .split(/\r?\n/)
       .map((line) => line.trim())
       .filter((line) => line !== '')

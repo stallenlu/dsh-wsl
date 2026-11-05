@@ -65,7 +65,6 @@ const DEFAULT_ROUTE = '/dsh-wsl/api'
 const MAX_BODY_BYTES = 64 * 1024
 const LOOPBACK = new Set(['localhost', '127.0.0.1', '::1', '::ffff:127.0.0.1'])
 /** `wsl.exe` writes UTF-16LE; decoding as UTF-8 yields NUL-interleaved garbage. */
-const WSL_ENCODING = 'utf16le' as BufferEncoding
 
 // --- host seams this plugin consumes -------------------------------------
 // Neither shape is published by the installed packages, so they are declared
@@ -135,8 +134,21 @@ export interface Distro {
   default: boolean
 }
 
+/**
+ * Decode `wsl.exe` stdout. The tool writes UTF-16LE by default, but honors
+ * `WSL_UTF8=1` (Microsoft's documented switch) by writing UTF-8 instead —
+ * including `-l -q`/`-l -v`, so `listDistros` must follow it. The environment
+ * at THIS call decides, because `execFileSync` hands our own environment to
+ * wsl.exe, so the same process that spawned the tool decodes it correctly.
+ * Byte sniffing is not sound here: UTF-16LE of a non-ASCII name (`Ubuntu-测试`)
+ * has non-zero high bytes and reads as plausible UTF-8.
+ */
+export function decodeWslOut(raw: Buffer): string {
+  return process.env.WSL_UTF8 === '1' ? raw.toString('utf8') : raw.toString('utf16le')
+}
+
 function wsl(args: readonly string[]): string {
-  return execFileSync('wsl.exe', args as string[], { windowsHide: true }).toString(WSL_ENCODING)
+  return decodeWslOut(execFileSync('wsl.exe', args as string[], { windowsHide: true }))
 }
 
 /**

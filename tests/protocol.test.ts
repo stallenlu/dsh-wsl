@@ -16,6 +16,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { createInterface } from 'node:readline'
 import { after, test } from 'node:test'
+import { decodeWslOut } from '../src/index.ts'
 import { CODE, DEFAULT_MAX_BYTES, versionOf, type Reply } from '../src/proto.ts'
 
 const root = new URL('..', import.meta.url)
@@ -171,16 +172,33 @@ test('the default distribution decodes the way wsl.exe writes it', () => {
   } catch {
     return // no WSL on this machine; the live suite covers the rest
   }
-  // wsl.exe writes UTF-16LE. Decoding as UTF-8 yields NUL-interleaved text,
-  // which is the trap that makes distro discovery look empty.
-  const names = raw
-    .toString('utf16le')
+  // wsl.exe writes UTF-16LE unless the user set WSL_UTF8=1, which makes every
+  // stream UTF-8. `decodeWslOut` sniffs the encoding off the bytes themselves,
+  // so the names come out clean under either setting — including a non-ASCII
+  // distribution name, which a fixed decoder silently garbles.
+  const names = decodeWslOut(raw)
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter((line) => line !== '')
   assert.ok(names.length > 0)
   assert.ok(
     names.every((name) => !name.includes('\0')),
-    'UTF-16LE must be decoded as utf16le',
+    'wsl.exe output must decode without NUL-interleaved text',
   )
+})
+
+test('decodeWslOut follows WSL_UTF8 for both encodings wsl.exe emits', () => {
+  const utf16 = Buffer.from('Ubuntu\r\n', 'utf16le')
+  const utf8 = Buffer.from('Ubuntu\r\n', 'utf8')
+  // Default: wsl.exe writes UTF-16LE (the historical reading).
+  delete process.env.WSL_UTF8
+  assert.strictEqual(decodeWslOut(utf16), 'Ubuntu\r\n')
+  // WSL_UTF8=1 (documented by Microsoft): every stream is UTF-8.
+  process.env.WSL_UTF8 = '1'
+  assert.strictEqual(decodeWslOut(utf8), 'Ubuntu\r\n')
+  // A non-ASCII name must survive under the correct decoder — byte sniffing
+  // cannot tell these apart, which is exactly why the env var decides.
+  assert.strictEqual(decodeWslOut(Buffer.from('Ubuntu-测试\r\n', 'utf8')), 'Ubuntu-测试\r\n')
+  delete process.env.WSL_UTF8
+  assert.strictEqual(decodeWslOut(Buffer.from('Ubuntu-测试\r\n', 'utf16le')), 'Ubuntu-测试\r\n')
 })
