@@ -112,7 +112,7 @@ action 自己的 DOM 元素向上走到
 shipped-hidden 变体则保持收起。
 
 底部入口仍注册在 `sidebar.footer.action`（`list` 型 slot、
-`replaceRisk: "none"`、新 id `dsh-wsl`）——标题栏席位在场时隐藏，标题栏
+`replaceRisk: "none"`、新 id `dsh-wsl-suite`）——标题栏席位在场时隐藏，标题栏
 缺席时作回退（rail 侧栏、发版改了类名）。它也是标题栏发现向上走的锚点。
 
 ## 终端
@@ -155,43 +155,50 @@ process.platform === 'win32'` 门清掉：该表达式由加载器在宿主上�
 
 ## 安装、更新、验证
 
-npm 上发布名是 `dsh-wsl-suite`（`dsh-wsl` 因 npm 防山寨规则不可注册）。在 profile 目录 `pnpm add dsh-wsl-suite` 即可，dshfind 的站内一键安装走的就是这条路。**从 GitHub 安装（任意机器）：** 把仓库加为 profile 依赖并启用 bundle。在
-DeepSeek Harness 会话里，或手动改 profile 的 `package.json`：
+**从 npm 安装（常规方式）。** 发布名是 `dsh-wsl-suite`（`dsh-wsl` 因 npm 防山寨规则不可注册），bundle
+与其中各行同名。在 profile 目录里：
 
 ```sh
 # 在 C:\Users\<你>\.dsh\profiles\desktop\ 下
-pnpm add "dsh-wsl@github:stallenlu/dsh-wsl"        # 或 npm i，写法相同
+pnpm add dsh-wsl-suite          # 或：npm install dsh-wsl-suite
 ```
 
-```json
-"dependencies": {
-  "dsh-wsl": "github:stallenlu/dsh-wsl"
-}
+然后在同一文件的 `dsh.profile.bundles` 里加 `"dsh-wsl-suite"` 并重启 harness。
+
+**从 GitHub 安装。** 结果相同，适合版本还没发到 registry 之前：
+
+```sh
+pnpm add "dsh-wsl-suite@github:stallenlu/dsh-wsl"
 ```
 
-然后在同一文件的 `dsh.profile.bundles` 里加 `"dsh-wsl"` 并重启 harness。
-`github:` 规格按 tarball 拉取，每次升版本整体替换副本——没有 `file:` 那套
+`github:` 规格按 tarball 拉取，每次推送整体替换副本——没有 `file:` 那套
 remove/reinstall 流程。
+
+有一条命名规则必须知道，违反它会让启动**静默**失败：**客户端 bundle 的注册 id 必须等于包名。**
+宿主按包名给客户端 boot 图建 key（`dsh-client-modules/lib/index.js` 的 `this.table.set(packageName, …)`），
+其 `arrive()` 只接受在该 id 下注册了 factory 的 bundle——否则 entry 永不激活，渲染端报
+`client-modules: duplicate factory registration`。`tsdown.config.ts` 把这个 id 写进 bundle banner，
+`tests/client.test.ts` 断言它与 `package.json` 一致。
 
 **本地检出（开发）：**
 
 ```text
 # 真源——在这里改
-C:\\Users\\GT14\\Documents\\deepseek-harness\\wsl-rework\\next\\
+C:\Users\GT14\Documents\deepseek-harness\wsl-rework\next\
 # harness 实际加载的副本（是文件复制，不是符号链接）
-C:\\Users\\GT14\\.dsh\\profiles\\desktop\\node_modules\\dsh-wsl\\
+C:\Users\GT14\.dsh\profiles\desktop\node_modules\dsh-wsl-suite\
 ```
 
 因为安装副本是复制，每处源码改动都要重装；在 DeepSeek Harness 会话里：
 
-1. 源码树里 `npm run verify`（类型检查 + 构建 + 58 项检查）。
-2. `plugin_manager remove_bundle target=dsh-wsl`，然后
-   `plugin_manager install_bundle target=file:C:\\Users\\GT14\\Documents\\deepseek-harness\\wsl-rework\\next`。
+1. 源码树里 `npm run verify`（类型检查 + 构建 + 60 项检查）。
+2. `plugin_manager remove_bundle target=dsh-wsl-suite`，然后
+   `plugin_manager install_bundle target=file:C:\Users\GT14\Documents\deepseek-harness\wsl-rework\next`。
 3. 重启 DSH（重装返回 `application: "restart-required"`）。
 4. 如果入口又消失了：先看
-   `C:\\Users\\GT14\\.dsh\\profiles\\desktop\\package.json` 的
-   `dsh.profile.bundles` 是否还含 `dsh-wsl`（并发的 profile 改写曾把它
-   掉过），再 `plugin_manager set_bundle target=dsh-wsl enabled=true`
+   `C:\Users\GT14\.dsh\profiles\desktop\package.json` 的
+   `dsh.profile.bundles` 是否还含 `dsh-wsl-suite`（并发的 profile 改写曾把它
+   掉过），再 `plugin_manager set_bundle target=dsh-wsl-suite enabled=true`
    热挂载——启动稳定且没有其他 HMR 事务时无需重启。
 
 不进 UI 的快速宿主侧自检：
@@ -211,7 +218,7 @@ curl -X POST http://127.0.0.1:<gui-port>/dsh-wsl/api \\
 npm install          # devDependencies 钉住 0.2.1-rc.5 宿主接口
 npm run typecheck
 npm run build        # lib/{index,fs,shell,search,client}.js
-npm test             # 58 项检查；live 的在没有发行版时跳过而非失败
+npm test             # 60 项检查；live 的在没有发行版时跳过而非失败
 npm run verify       # 类型检查，然后 build + test
 ```
 

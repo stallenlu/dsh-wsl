@@ -116,7 +116,7 @@ is widened to 92 px while the entry is seated (`max-width: 92px` in
 it collapsed.
 
 The footer entry stays registered on `sidebar.footer.action` (a `list` slot,
-`replaceRisk: "none"`, fresh id `dsh-wsl`) — hidden while the header seat is present,
+`replaceRisk: "none"`, fresh id `dsh-wsl-suite`) — hidden while the header seat is present,
 and the fallback when the header is absent (rail sidebar, a release that renames the
 classes). It is also the anchor the header discovery walks up from.
 
@@ -164,24 +164,33 @@ host loader itself tests for, so a re-registered preset still evaluates its own 
 
 ## Installing, updating, verifying
 
-`npm install dsh-wsl-suite` in the profile directory — the simplest path, and the one dshfind's in-DSH marketplace uses. **From GitHub (any machine):** add the repo as a profile dependency and enable the
-bundle. From a DeepSeek Harness session, or by hand in the profile's
-`package.json`:
+**From npm (the normal way).** The published name is `dsh-wsl-suite`; the bundle
+and its rows are named the same. In the profile directory:
 
 ```sh
 # in C:\Users\<you>\.dsh\profiles\desktop\
-pnpm add "dsh-wsl@github:stallenlu/dsh-wsl"        # or npm i, same spec
+pnpm add dsh-wsl-suite          # or: npm install dsh-wsl-suite
 ```
 
-```json
-"dependencies": {
-  "dsh-wsl": "github:stallenlu/dsh-wsl"
-}
+then add `"dsh-wsl-suite"` to `dsh.profile.bundles` in that profile's `package.json`
+and restart the harness.
+
+**From GitHub.** Same result, useful before a version reaches the registry:
+
+```sh
+pnpm add "dsh-wsl-suite@github:stallenlu/dsh-wsl"
 ```
 
-then add `"dsh-wsl"` to `dsh.profile.bundles` in the same file and restart the
-harness. `github:` specs are fetched as a tarball, so the copy is replaced
-wholesale on every version bump — no `file:`-style remove/reinstall dance.
+`github:` specs are fetched as a tarball, so the copy is replaced wholesale on every
+push — no `file:`-style remove/reinstall dance.
+
+One naming rule worth knowing, because violating it breaks the boot silently: **the
+client bundle's registration id must equal the package name.** The host keys its client
+boot graph by package name (`dsh-client-modules/lib/index.js` `this.table.set(packageName, …)`),
+and its `arrive()` only accepts a bundle whose factory registered under that same id —
+otherwise the entry never activates and the renderer logs
+`client-modules: duplicate factory registration`. `tsdown.config.ts` writes that id into
+the bundle banner, and `tests/client.test.ts` asserts it matches `package.json`.
 
 **Local checkout (development):**
 
@@ -189,20 +198,20 @@ wholesale on every version bump — no `file:`-style remove/reinstall dance.
 # source of truth — edit here
 C:\Users\GT14\Documents\deepseek-harness\wsl-rework\next\
 # the copy the harness actually loads (a FILE COPY, not a symlink)
-C:\Users\GT14\.dsh\profiles\desktop\node_modules\dsh-wsl\
+C:\Users\GT14\.dsh\profiles\desktop\node_modules\dsh-wsl-suite\
 ```
 
 Because the installed copy is a copy, every source change needs a reinstall; from a
 DeepSeek Harness session:
 
-1. `npm run verify` in the source tree (typecheck + build + 58 checks).
-2. `plugin_manager remove_bundle target=dsh-wsl`, then
+1. `npm run verify` in the source tree (typecheck + build + 60 checks).
+2. `plugin_manager remove_bundle target=dsh-wsl-suite`, then
    `plugin_manager install_bundle target=file:C:\Users\GT14\Documents\deepseek-harness\wsl-rework\next`.
 3. Restart DSH (the reinstall answers `application: "restart-required"`).
 4. If the entry ever disappears again: check `dsh.profile.bundles` in
-   `C:\Users\GT14\.dsh\profiles\desktop\package.json` still contains `dsh-wsl`
+   `C:\Users\GT14\.dsh\profiles\desktop\package.json` still contains `dsh-wsl-suite`
    (a concurrent profile rewrite has dropped it before), and
-   `plugin_manager set_bundle target=dsh-wsl enabled=true` re-mounts it hot — no
+   `plugin_manager set_bundle target=dsh-wsl-suite enabled=true` re-mounts it hot — no
    restart needed — when the boot is stable and no other HMR transaction is open.
 
 Quick host-side check without the UI:
@@ -222,7 +231,7 @@ entries proves the whole pipe.
 npm install          # devDependencies pin the 0.2.1-rc.5 host surface
 npm run typecheck
 npm run build        # lib/{index,fs,shell,search,client}.js
-npm test             # 58 checks; live ones skip when no distro is present
+npm test             # 60 checks; live ones skip when no distro is present
 npm run verify       # typecheck, then build + test
 ```
 

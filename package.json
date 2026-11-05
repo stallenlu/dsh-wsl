@@ -1,6 +1,6 @@
 {
   "name": "dsh-wsl-suite",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "WSL workspaces for DeepSeek Harness, served by one persistent in-distro agent instead of 9P polling.",
   "license": "MIT",
   "author": "stallenlu",
