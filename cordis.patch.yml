@@ -5,4 +5,4 @@
 # is described by the `dsh.client` manifest in package.json.
 - insert:
     - id: dsh-wsl
-      name: 'dsh-wsl'
+      name: 'dsh-wsl-suite'
